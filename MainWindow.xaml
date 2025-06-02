@@ -1,9 +1,9 @@
-﻿<Window x:Class="bananaclicker.MainWindow"
+<Window x:Class="ModernClicker.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="BananaClicker"
-        Height="360"
-        Width="440"
+        Title="ModernClicker"
+        Height="820"
+        Width="480"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -14,92 +14,582 @@
 
     <Window.Resources>
 
-        <!-- Neon Glow -->
-        <DropShadowEffect x:Key="GlowEffect"
-                          Color="Yellow"
-                          BlurRadius="15"
-                          ShadowDepth="0"
-                          Opacity="0.8"/>
+        <!-- Color Brushes -->
+        <SolidColorBrush x:Key="PrimaryDark" Color="#0F0F0F"/>
+        <SolidColorBrush x:Key="SecondaryDark" Color="#1A1A1A"/>
+        <SolidColorBrush x:Key="AccentBlue" Color="#007ACC"/>
+        <SolidColorBrush x:Key="AccentPurple" Color="#6B46C1"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#A0A0A0"/>
+        <SolidColorBrush x:Key="Success" Color="#10B981"/>
+        <SolidColorBrush x:Key="Warning" Color="#F59E0B"/>
+        <SolidColorBrush x:Key="Danger" Color="#EF4444"/>
 
-        <!-- Modern Rounded Button -->
-        <Style TargetType="Button" x:Key="SexyButton">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="#44485A"/>
-            <Setter Property="Padding" Value="8,4"/>
+        <!-- Gradient Brushes -->
+        <LinearGradientBrush x:Key="MainGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#0F0F0F" Offset="0"/>
+            <GradientStop Color="#1A1A1A" Offset="0.5"/>
+            <GradientStop Color="#0A0A0A" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="CardGradient" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#252525" Offset="0"/>
+            <GradientStop Color="#1F1F1F" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="ButtonPrimary" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#007ACC" Offset="0"/>
+            <GradientStop Color="#005A9E" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="ButtonSuccess" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#10B981" Offset="0"/>
+            <GradientStop Color="#059669" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="ButtonDanger" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#EF4444" Offset="0"/>
+            <GradientStop Color="#DC2626" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Drop Shadow Effects -->
+        <DropShadowEffect x:Key="WindowShadow"
+                          Color="#000000"
+                          BlurRadius="30"
+                          ShadowDepth="0"
+                          Opacity="0.7"/>
+
+        <DropShadowEffect x:Key="CardShadow"
+                          Color="#000000"
+                          BlurRadius="15"
+                          ShadowDepth="2"
+                          Opacity="0.3"/>
+
+        <DropShadowEffect x:Key="ButtonShadow"
+                          Color="#000000"
+                          BlurRadius="8"
+                          ShadowDepth="2"
+                          Opacity="0.4"/>
+
+        <DropShadowEffect x:Key="GlowEffect"
+                          Color="#007ACC"
+                          BlurRadius="12"
+                          ShadowDepth="0"
+                          Opacity="0.6"/>
+
+        <!-- Modern Button Style -->
+        <Style TargetType="Button" x:Key="ModernButton">
+            <Setter Property="Background" Value="{StaticResource ButtonPrimary}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Margin" Value="5"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Effect" Value="{StaticResource ButtonShadow}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="10"
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8"
                                 SnapsToDevicePixels="True">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Focusable="False"/>
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Effect" Value="{StaticResource GlowEffect}"/>
+                                <Setter Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.8"/>
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.98" ScaleY="0.98"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#5D6078"/>
-                    <Setter Property="Effect">
-                        <Setter.Value>
-                            <DropShadowEffect BlurRadius="10" Color="Lime" ShadowDepth="0"/>
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#383B4F"/>
-                </Trigger>
-            </Style.Triggers>
         </Style>
+
+        <!-- Success Button Style -->
+        <Style TargetType="Button" x:Key="SuccessButton" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="{StaticResource ButtonSuccess}"/>
+        </Style>
+
+        <!-- Danger Button Style -->
+        <Style TargetType="Button" x:Key="DangerButton" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="{StaticResource ButtonDanger}"/>
+        </Style>
+
+        <!-- Title Bar Button Style -->
+        <Style TargetType="Button" x:Key="TitleButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#33FFFFFF"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern TextBox Style -->
+        <Style TargetType="TextBox" x:Key="ModernTextBox">
+            <Setter Property="Background" Value="#2A2A2A"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="BorderBrush" Value="#404040"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                        Focusable="False"
+                                        HorizontalScrollBarVisibility="Hidden"
+                                        VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#007ACC"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#007ACC"/>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#007ACC" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern ComboBox Style -->
+        <Style TargetType="ComboBox" x:Key="ModernComboBox">
+            <Setter Property="Background" Value="#2A2A2A"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="BorderBrush" Value="#404040"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <Grid>
+                                <ToggleButton x:Name="toggleButton"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                            ClickMode="Press"/>
+                                <ContentPresenter x:Name="contentPresenter"
+                                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                Content="{TemplateBinding SelectionBoxItem}"
+                                                ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Margin="12,0,30,0"
+                                                IsHitTestVisible="False"/>
+                                <Path x:Name="arrow"
+                                      Data="M 0 0 L 4 4 L 8 0 Z"
+                                      Fill="{StaticResource TextSecondary}"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center"
+                                      Margin="0,0,12,0"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#007ACC"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- CheckBox Style -->
+        <Style TargetType="CheckBox" x:Key="ModernCheckBox">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="5,2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="checkBoxBorder"
+                                    Grid.Column="0"
+                                    Width="18"
+                                    Height="18"
+                                    Background="#2A2A2A"
+                                    BorderBrush="#404040"
+                                    BorderThickness="1"
+                                    CornerRadius="3"
+                                    VerticalAlignment="Center">
+                                <Path x:Name="checkMark"
+                                      Data="M 2 6 L 6 10 L 14 2"
+                                      Stroke="{StaticResource AccentBlue}"
+                                      StrokeThickness="2"
+                                      Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Grid.Column="1"
+                                            Margin="8,0,0,0"
+                                            VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="checkMark" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource AccentBlue}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="{StaticResource AccentBlue}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Animations -->
+        <Storyboard x:Key="FadeIn">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                           From="0" To="1" Duration="0:0:0.3"/>
+        </Storyboard>
+
+        <Storyboard x:Key="StatusPulse" RepeatBehavior="Forever">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                           From="0.7" To="1.0" Duration="0:0:1"
+                           AutoReverse="True"/>
+        </Storyboard>
 
     </Window.Resources>
 
-    <Border CornerRadius="15" Background="#D91E1E2F" BorderBrush="#444" BorderThickness="1" Margin="10">
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource FadeIn}"/>
+        </EventTrigger>
+    </Window.Triggers>
+
+    <!-- Main Container -->
+    <Border Background="{StaticResource MainGradient}"
+            CornerRadius="12"
+            Effect="{StaticResource WindowShadow}"
+            Margin="15">
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Custom Title Bar -->
-            <DockPanel Grid.Row="0" Height="40" Background="#2B2E40" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
-                <TextBlock Text="🍌 Banana Clicker"
-                           FontSize="20"
-                           FontWeight="Bold"
-                           Foreground="White"
-                           VerticalAlignment="Center"
-                           Margin="10,0,0,0"
-                           Effect="{StaticResource GlowEffect}"/>
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,10,0">
-                    <Button Content="—" Width="30" Height="30" Click="Minimize_Click" Style="{StaticResource SexyButton}" Margin="0,0,5,0"/>
-                    <Button Content="✕" Width="30" Height="30" Click="Close_Click" Style="{StaticResource SexyButton}"/>
-                </StackPanel>
-            </DockPanel>
+            <!-- Title Bar -->
+            <Border Grid.Row="0"
+                    Height="50"
+                    Background="#22FFFFFF"
+                    CornerRadius="12,12,0,0"
+                    MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid>
+                    <StackPanel Orientation="Horizontal"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Left"
+                              Margin="20,0">
+                        <Ellipse Width="12" Height="12" 
+                               Fill="{StaticResource AccentBlue}"
+                               Margin="0,0,12,0"/>
+                        <TextBlock Text="Banana Clicker"
+                                 Foreground="{StaticResource TextPrimary}"
+                                 FontFamily="Segoe UI"
+                                 FontWeight="SemiBold"
+                                 FontSize="16"
+                                 VerticalAlignment="Center"/>
+                        <TextBlock Text="by OpenBanana"
+                                             Foreground="{StaticResource TextSecondary}"
+                                             FontSize="12" Height="17"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Center"
+                              Margin="0,0,15,0">
+                        <Button Content="─"
+                              Click="Minimize_Click"
+                              Style="{StaticResource TitleButton}"/>
+                        <Button Content="✕"
+                              Click="Close_Click"
+                              Style="{StaticResource TitleButton}"
+                              Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
             <!-- Main Content -->
-            <StackPanel Grid.Row="1" Margin="30,20,30,30" VerticalAlignment="Top">
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                    <TextBlock Text="Interval (ms):" Foreground="White" Width="120" VerticalAlignment="Center"/>
-                    <TextBox x:Name="IntervalBox" Width="100" Text="6" />
-                </StackPanel>
+            <ScrollViewer Grid.Row="1" 
+                        VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Disabled"
+                        Margin="25,20,25,25">
+                <StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                    <TextBlock Text="Toggle Hotkey:" Foreground="White" Width="120" VerticalAlignment="Center"/>
-                    <ComboBox x:Name="ToggleKeyBox" Width="100"/>
-                </StackPanel>
+                    <!-- Settings Card -->
+                    <Border Background="{StaticResource CardGradient}"
+                            CornerRadius="10"
+                            Effect="{StaticResource CardShadow}"
+                            Padding="25,20"
+                            Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="⚙️ Configuration"
+                                     Foreground="{StaticResource TextPrimary}"
+                                     FontFamily="Segoe UI"
+                                     FontWeight="Bold"
+                                     FontSize="18"
+                                     Margin="0,0,0,20"/>
 
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                    <Button Content="Start" Click="Start_Click" Width="100" Margin="0,0,10,0" Style="{StaticResource SexyButton}"/>
-                    <Button Content="Stop" Click="Stop_Click" Width="100" Style="{StaticResource SexyButton}"/>
-                </StackPanel>
+                            <!-- Click Interval Setting -->
+                            <Grid Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="120"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Click Interval"
+                                             Foreground="{StaticResource TextPrimary}"
+                                             FontWeight="SemiBold"
+                                             FontSize="14"
+                                             Margin="0,0,0,4"/>
+                                    <TextBlock Text="Time between clicks (milliseconds)"
+                                             Foreground="{StaticResource TextSecondary}"
+                                             FontSize="12"/>
+                                </StackPanel>
+                                <TextBox x:Name="IntervalBox"
+                                       Grid.Column="1"
+                                       Text="100"
+                                       Style="{StaticResource ModernTextBox}"
+                                       VerticalAlignment="Center"/>
+                            </Grid>
 
-                <TextBlock x:Name="StatusLabel" Text="Status: Idle" Foreground="Lime" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                <TextBlock Text="Press your toggle key to start/stop (default: J)." Foreground="Gray" FontSize="12"/>
-            </StackPanel>
+                            <!-- Hotkey Settings -->
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Toggle Hotkey"
+                                         Foreground="{StaticResource TextPrimary}"
+                                         FontWeight="SemiBold"
+                                         FontSize="14"
+                                         Margin="0,0,0,8"/>
+
+                                <!-- Modifier Keys -->
+                                <TextBlock Text="Modifier Keys:"
+                                         Foreground="{StaticResource TextSecondary}"
+                                         FontSize="12"
+                                         Margin="0,0,0,5"/>
+                                <WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <CheckBox x:Name="CtrlCheckBox" Content="Ctrl" Style="{StaticResource ModernCheckBox}"/>
+                                    <CheckBox x:Name="AltCheckBox" Content="Alt" Style="{StaticResource ModernCheckBox}"/>
+                                    <CheckBox x:Name="ShiftCheckBox" Content="Shift" Style="{StaticResource ModernCheckBox}"/>
+                                    <CheckBox x:Name="WinCheckBox" Content="Win" Style="{StaticResource ModernCheckBox}"/>
+                                </WrapPanel>
+
+                                <!-- Main Key -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="120"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Main Key:"
+                                                 Foreground="{StaticResource TextSecondary}"
+                                                 FontSize="12"/>
+                                    </StackPanel>
+                                    <ComboBox x:Name="MainKeyBox"
+                                            Grid.Column="1"
+                                            Style="{StaticResource ModernComboBox}"
+                                            VerticalAlignment="Center"
+                                            SelectedIndex="0">
+                                        <ComboBoxItem Content="F1"/>
+                                        <ComboBoxItem Content="F2"/>
+                                        <ComboBoxItem Content="F3"/>
+                                        <ComboBoxItem Content="F4"/>
+                                        <ComboBoxItem Content="F5"/>
+                                        <ComboBoxItem Content="F6"/>
+                                        <ComboBoxItem Content="F7"/>
+                                        <ComboBoxItem Content="F8"/>
+                                        <ComboBoxItem Content="F9"/>
+                                        <ComboBoxItem Content="F10"/>
+                                        <ComboBoxItem Content="F11"/>
+                                        <ComboBoxItem Content="F12"/>
+                                        <ComboBoxItem Content="Space"/>
+                                        <ComboBoxItem Content="Enter"/>
+                                        <ComboBoxItem Content="Tab"/>
+                                        <ComboBoxItem Content="A"/>
+                                        <ComboBoxItem Content="B"/>
+                                        <ComboBoxItem Content="C"/>
+                                        <ComboBoxItem Content="D"/>
+                                        <ComboBoxItem Content="E"/>
+                                        <ComboBoxItem Content="Q"/>
+                                        <ComboBoxItem Content="R"/>
+                                        <ComboBoxItem Content="T"/>
+                                        <ComboBoxItem Content="X"/>
+                                        <ComboBoxItem Content="Z"/>
+                                        <ComboBoxItem Content="1"/>
+                                        <ComboBoxItem Content="2"/>
+                                        <ComboBoxItem Content="3"/>
+                                        <ComboBoxItem Content="4"/>
+                                        <ComboBoxItem Content="5"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <!-- Record Custom Key Button -->
+                                <Button x:Name="RecordKeyButton"
+                                      Content="🎹 Record Custom Key"
+                                      Click="RecordKey_Click"
+                                      Style="{StaticResource ModernButton}"
+                                      Height="35"
+                                      FontSize="13"
+                                      Margin="0,5,0,0"/>
+                            </StackPanel>
+
+                            <!-- Current Hotkey Display -->
+                            <Border Background="#1A2A3A"
+                                    CornerRadius="6"
+                                    Padding="12,8"
+                                    Margin="0,5,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="Current Hotkey:"
+                                             Foreground="{StaticResource TextSecondary}"
+                                             FontSize="12"
+                                             Margin="0,0,0,2"/>
+                                    <TextBlock x:Name="CurrentHotkeyDisplay"
+                                             Text="F1"
+                                             Foreground="{StaticResource AccentBlue}"
+                                             FontWeight="SemiBold"
+                                             FontSize="14"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Control Panel -->
+                    <Border Background="{StaticResource CardGradient}"
+                            CornerRadius="10"
+                            Effect="{StaticResource CardShadow}"
+                            Padding="25,20"
+                            Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="🎮 Controls"
+                                     Foreground="{StaticResource TextPrimary}"
+                                     FontFamily="Segoe UI"
+                                     FontWeight="Bold"
+                                     FontSize="18"
+                                     Margin="0,0,0,20"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0"
+                                      Content="▶️ START"
+                                      Click="Start_Click"
+                                      Style="{StaticResource SuccessButton}"
+                                      Height="45"
+                                      FontSize="16"
+                                      Margin="0,0,10,0"/>
+                                <Button Grid.Column="1"
+                                      Content="⏹️ STOP"
+                                      Click="Stop_Click"
+                                      Style="{StaticResource DangerButton}"
+                                      Height="45"
+                                      FontSize="16"
+                                      Margin="10,0,0,0"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Status Panel -->
+                    <Border Background="{StaticResource CardGradient}"
+                            CornerRadius="10"
+                            Effect="{StaticResource CardShadow}"
+                            Padding="25,20">
+                        <StackPanel>
+                            <TextBlock Text="📊 Status"
+                                     Foreground="{StaticResource TextPrimary}"
+                                     FontFamily="Segoe UI"
+                                     FontWeight="Bold"
+                                     FontSize="18"
+                                     Margin="0,0,0,15"/>
+
+                            <Border Background="#1A3A1A"
+                                    CornerRadius="8"
+                                    Padding="15,12">
+                                <StackPanel>
+                                    <TextBlock x:Name="StatusLabel"
+                                             Text="Status: Ready"
+                                             Foreground="{StaticResource Success}"
+                                             FontWeight="SemiBold"
+                                             FontSize="16"
+                                             HorizontalAlignment="Center"
+                                             Margin="0,0,0,8">
+                                        <TextBlock.Triggers>
+                                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                                <BeginStoryboard Storyboard="{StaticResource StatusPulse}"/>
+                                            </EventTrigger>
+                                        </TextBlock.Triggers>
+                                    </TextBlock>
+                                    <TextBlock x:Name="HotkeyHintLabel"
+                                             Text="💡 Use your hotkey to toggle clicking on/off"
+                                             Foreground="{StaticResource TextSecondary}"
+                                             FontSize="13"
+                                             HorizontalAlignment="Center"
+                                             TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
     </Border>
 </Window>
